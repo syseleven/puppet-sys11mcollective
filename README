@@ -1,0 +1,19 @@
+This is a thin wrapper around the puppetlabs-mcollective module.
+
+The behavior is mainly driven by the three variables
+ * client
+ * server
+ * middleware
+
+ client and server are documented at https://github.com/puppetlabs/puppetlabs-rabbitmq.
+ middleware will provision a rabbitmq since this functionality is missing from upstream.
+
+
+
+TODO:
+
+* SSL support for middleware
+* AAA & hardening for mcollective
+  * https://docs.puppetlabs.com/mcollective/security.html
+  * https://docs.puppetlabs.com/mcollective/reference/plugins/security_aes.html
+  * https://docs.puppetlabs.com/mcollective/reference/plugins/security_ssl.html
