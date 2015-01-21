@@ -1,0 +1,7 @@
+TODO:
+
+* SSL support for middleware
+* AAA & hardening for mcollective
+  * https://docs.puppetlabs.com/mcollective/security.html
+  * https://docs.puppetlabs.com/mcollective/reference/plugins/security_aes.html
+  * https://docs.puppetlabs.com/mcollective/reference/plugins/security_ssl.html
