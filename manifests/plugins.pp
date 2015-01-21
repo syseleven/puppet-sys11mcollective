@@ -1,19 +1,10 @@
-class sys11mcollective::plugins {
+class sys11mcollective::plugins(
+  $plugins = []
+) {
 
-  mcollective::plugin { 'puppet':
+  # mcollective::plugin will install -agent and -client package variants as needed
+
+  ::mcollective::plugin { $plugins:
     package => true,
   }
-
-  mcollective::plugin { 'shell':
-    package => true,
-  }
-
-  mcollective::plugin { 'package':
-    package => true,
-  }
-
-  mcollective::plugin { 'nettest':
-    package => true,
-  }
-
 }
