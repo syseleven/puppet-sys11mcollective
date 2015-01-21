@@ -1,6 +1,6 @@
 # This class prepares a RabbitMQ middleware service for use by MCollective.
 # largely lifted from https://github.com/puppetlabs/puppetlabs-mcollective/blob/2.0.0/examples/mco_profile/manifests/middleware/rabbitmq.pp
-class sys11mcollective::profile::middleware (
+class sys11mcollective::middleware (
   $confdir                   = '/etc/rabbitmq',
   $vhost                     = '/mcollective',
   $delete_guest_user         = true,

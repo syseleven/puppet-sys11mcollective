@@ -3,7 +3,7 @@ class sys11mcollective(
 ) {
 
   if $middleware {
-    class { 'sys11mcollective::profile::middleware': }
+    class { 'sys11mcollective::middleware': }
   }
 
   class { '::mcollective': }
