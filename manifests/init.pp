@@ -1,11 +1,12 @@
-class sys11mcollective {
+class sys11mcollective(
+  $middleware = false,
+) {
 
-  include sys11mcollective::plugins
-
-  if hiera('sys11mcollective::middleware', false)  {
+  if $middleware {
     class { 'sys11mcollective::profile::middleware': }
   }
 
   class { '::mcollective': }
+  class { 'sys11mcollective::plugins': }
 
 }
