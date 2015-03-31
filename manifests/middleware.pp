@@ -4,51 +4,63 @@ class sys11mcollective::middleware (
   $confdir                   = '/etc/rabbitmq',
   $vhost                     = '/mcollective',
   $delete_guest_user         = true,
-  $middleware_port           = hiera('mcollective::middleware_port'),
+  $middleware_ssl            = hiera('mcollective::middleware_ssl'),
+  $middleware_port           = hiera('mcollective::middleware_port', undef),
+  $middleware_ssl_port       = hiera('mcollective::middleware_ssl_port', undef),
   $middleware_user           = hiera('mcollective::middleware_user'),
   $middleware_password       = hiera('mcollective::middleware_password'),
   $middleware_admin_user     = hiera('mcollective::middleware_admin_user'),
   $middleware_admin_password = hiera('mcollective::middleware_admin_password'),
-#  $ssl_ca_cert               = 
-#  $ssl_server_cert           = 
-#  $ssl_server_private        = 
-#  $middleware_ssl_port       = 
+  $ssl_ca_cert               = "${::puppet_vardir}/ssl/certs/ca.pem",
+  $ssl_server_cert           = "${::puppet_vardir}/ssl/certs/${::fqdn}.pem",
+  $ssl_server_private        = "${::puppet_vardir}/ssl/private_keys/${::fqdn}.pem",
 ) {
 
-#  # Set up SSL files. Use copies of the PEM keys specified as parameters.
-#  file { "${confdir}/ca.pem":
-#    owner  => 'rabbitmq',
-#    group  => 'rabbitmq',
-#    mode   => '0444',
-#    source => $ssl_ca_cert,
-#    notify => Service['rabbitmq-server'],
-#  }
-#  file { "${confdir}/server_cert.pem":
-#    owner  => 'rabbitmq',
-#    group  => 'rabbitmq',
-#    mode   => '0444',
-#    source => $ssl_server_cert,
-#    notify => Service['rabbitmq-server'],
-#  }
-#  file { "${confdir}/server_private.pem":
-#    owner  => 'rabbitmq',
-#    group  => 'rabbitmq',
-#    mode   => '0400',
-#    source => $ssl_server_private,
-#    notify => Service['rabbitmq-server'],
-#  }
-#
-  # Install the RabbitMQ service using the puppetlabs/rabbitmq module
-  class { '::rabbitmq':
-    config_stomp      => true,
-    delete_guest_user => $delete_guest_user,
-    ssl               => false,
-    stomp_port        => $middleware_port,
-#    ssl_stomp_port    => $middleware_ssl_port,
-#    ssl_cacert        => "${confdir}/ca.pem",
-#    ssl_cert          => "${confdir}/server_cert.pem",
-#    ssl_key           => "${confdir}/server_private.pem",
+
+  if ($middleware_ssl) {
+
+    file { "${confdir}/ca.pem":
+      owner  => 'rabbitmq',
+      group  => 'rabbitmq',
+      mode   => '0444',
+      source => $ssl_ca_cert,
+      notify => Service['rabbitmq-server'],
+    }
+    file { "${confdir}/server_cert.pem":
+      owner  => 'rabbitmq',
+      group  => 'rabbitmq',
+      mode   => '0444',
+      source => $ssl_server_cert,
+      notify => Service['rabbitmq-server'],
+    }
+    file { "${confdir}/server_key.pem":
+      owner  => 'rabbitmq',
+      group  => 'rabbitmq',
+      mode   => '0400',
+      source => $ssl_server_private,
+      notify => Service['rabbitmq-server'],
+    }
+
+    # Install the RabbitMQ service using the puppetlabs/rabbitmq module
+    class { '::rabbitmq':
+      config_stomp      => true,
+      delete_guest_user => $delete_guest_user,
+      ssl               => $middleware_ssl,
+      ssl_only          => $middleware_ssl,
+      ssl_stomp_port    => $middleware_ssl_port,
+      ssl_cert          => "${confdir}/server_cert.pem",
+      ssl_key           => "${confdir}/server_key.pem",
+    }
   }
+
+  else {
+    class { '::rabbitmq':
+      config_stomp      => true,
+      delete_guest_user => $delete_guest_user,
+      stomp_port        => $middleware_port,
+    }
+  }
+
   contain rabbitmq
 
   # Configure the RabbitMQ service for use by MCollective

@@ -1,19 +1,36 @@
 This is a thin wrapper around the puppetlabs-mcollective module.
 
 The behavior is mainly driven by the three variables
- * client
- * server
- * middleware
+  * ::mcollective::client
+  * ::mcollective::server
+  * ::mcollective::middleware
 
  client and server are documented at https://github.com/puppetlabs/puppetlabs-rabbitmq.
  middleware will provision a rabbitmq since this functionality is missing from upstream.
 
 
+When using SSL/TLS (::mcollective::middleware_ssl set to true) the following defaults are used:
 
-TODO:
+  * mcollective-agent will copy (/etc/mcollective) and use the puppet node cert, private key and puppetmaster ca
 
-* SSL support for middleware
-* AAA & hardening for mcollective
+  * mcollective-client will use the copies of mcollective-agent (mco runs will need root privilege)
+    * This is necessary because mcollective-client wants a fully authenticated TLS connection where
+      both parties present certificates
+
+  * rabbitmq will copy (/etc/rabbitmq) and use the puppet node cert, private key and puppetmaster ca
+
+
+When using the sshkey-security-plugin
+
+  * the mcollective agent will authenticate client requests against the user's authorized_keys
+    file, e.g. for root requests /root/.ssh/authorized_keys
+
+  * the mcollective client will authenticate agent answers against the mcollective known-hosts file
+    (Default: /etc/mcollective/ssh_known_hosts)
+
+
+Relevant reading material:
+  * https://docs.puppetlabs.com/mcollective/overview_components.html
   * https://docs.puppetlabs.com/mcollective/security.html
   * https://docs.puppetlabs.com/mcollective/reference/plugins/security_aes.html
   * https://docs.puppetlabs.com/mcollective/reference/plugins/security_ssl.html
