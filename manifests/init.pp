@@ -24,8 +24,8 @@ class sys11mcollective(
       ssl_server_private => "${::puppet_vardir}/ssl/private_keys/${::fqdn}.pem",
       ssl_ca_cert        => "${::puppet_vardir}/ssl/certs/ca.pem",
     }
-
   }
+
   else {
     class { '::mcollective':
       securityprovider  => $securityprovider,
@@ -34,6 +34,7 @@ class sys11mcollective(
 
   # When we use SSL for the broker mcollective wants all clients to authenticate themselves with certificates as well
   if hiera('mcollective::middleware_ssl', false) and hiera('mcollective::client', false) {
+
     mcollective::client::setting { 'plugin.rabbitmq.pool.1.ssl.cert':
       value => "${mcollective::confdir}/server_public.pem",
     }
