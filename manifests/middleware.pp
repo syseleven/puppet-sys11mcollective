@@ -4,7 +4,7 @@ class sys11mcollective::middleware (
   $confdir                   = '/etc/rabbitmq',
   $vhost                     = '/mcollective',
   $delete_guest_user         = true,
-  $middleware_ssl            = hiera('mcollective::middleware_ssl'),
+  $middleware_ssl            = hiera('mcollective::middleware_ssl', false),
   $middleware_port           = hiera('mcollective::middleware_port', undef),
   $middleware_ssl_port       = hiera('mcollective::middleware_ssl_port', undef),
   $middleware_user           = hiera('mcollective::middleware_user'),
