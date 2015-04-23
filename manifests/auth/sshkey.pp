@@ -19,11 +19,13 @@ class sys11mcollective::auth::sshkey {
     value => "$known_hosts_file",
   }
 
-  @@sshkey { $::hostname:
-    type => dsa,
-    key => $::sshdsakey,
+  @@sshkey { "${module_name}_${::hostname}":
+    name   => $::hostname,
+    type   => dsa,
+    key    => $::sshdsakey,
     target => $known_hosts_file,
+    tag    => $module_name,
   }
 
-  Sshkey <<| |>>
+  Sshkey <<| tag == $module_name |>>
 }
