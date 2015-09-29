@@ -12,7 +12,7 @@ class sys11mcollective::auth::sshkey {
   }
 
   package { 'net-ssh':
-    ensure   => '2.10.1.rc2',
+    ensure   => '2.9.2',
     provider => gem,
   }
 
