@@ -8,6 +8,7 @@ class sys11mcollective::auth::sshkey {
   package { 'sshkeyauth':
     ensure   => installed,
     provider => gem,
+    require  => Package['net-ssh'],
   }
 
   package { 'net-ssh':
