@@ -10,6 +10,12 @@ class sys11mcollective::auth::sshkey {
     provider => gem,
   }
 
+  package { 'net-ssh':
+    ensure   => installed,
+    provider => gem,
+    version  => 2.10.0,
+  }
+
   # We use an exported resource that collects the SSH host keys from all nodes connected to the puppet master
   # These host keys then identify valid mcollective agent/servers in the mcollective cluster
 
