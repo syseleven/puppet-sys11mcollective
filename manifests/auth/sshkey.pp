@@ -11,9 +11,8 @@ class sys11mcollective::auth::sshkey {
   }
 
   package { 'net-ssh':
-    ensure   => installed,
+    ensure   => '2.10.0',
     provider => gem,
-    version  => 2.10.0,
   }
 
   # We use an exported resource that collects the SSH host keys from all nodes connected to the puppet master
